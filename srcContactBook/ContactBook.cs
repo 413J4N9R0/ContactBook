@@ -138,7 +138,7 @@ public class ContactBook
 
     private string GetInput()
     {
-        return Console.ReadLine() ?? "";
+        return Console.ReadLine()!.ToUpper();
     }
 
     private bool IsValidInput(string input)

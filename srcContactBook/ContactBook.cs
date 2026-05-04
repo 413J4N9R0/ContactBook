@@ -249,7 +249,34 @@ public class ContactBook
         size = GetInt("Enter page size", 1, max);
         page = 1;
     }
-    private void CreateContact() { Console.WriteLine("Create Contact"); }
+    private void CreateContact()
+    {
+        Console.Clear();
+        Console.WriteLine(new string('#', 80));
+        Console.WriteLine("Create Contact");
+        Console.WriteLine(new string('#', 80));
+        Console.WriteLine();
+        Console.Write("Enter First Name:");
+        string fname = Console.ReadLine()!;
+        Console.Write("Enter Last Name:");
+        string lname = Console.ReadLine()!;
+        Console.Write("Enter phone number:");
+        string phone = Console.ReadLine()!;
+        Console.Write("Enter email address:");
+        string email = Console.ReadLine()!;
+        if (Confirm("Do you want to create this contact?", YES))
+        {
+            Contact c = new Contact(fname, lname, phone, email);
+            allcontacts.Add(c);
+            page = PageCount(size, allcontacts.Count);
+            Console.WriteLine("Contact Added Succesfully");
+        }
+        else
+        {
+            Console.WriteLine("Operation Canceled. Contact was NOT saved.");
+        }
+
+    }
     private void ReviewContact() { Console.WriteLine("Review Contact"); }
     private void UpdateContact() { Console.WriteLine("Update Contact"); }
     private void DeleteContact() { Console.WriteLine("Delete Contact"); }

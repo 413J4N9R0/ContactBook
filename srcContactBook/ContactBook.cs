@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
@@ -7,6 +8,10 @@ namespace ContactBook;
 public class ContactBook
 
 {
+    public const string YES = "Y";
+    public const string NO = "N";
+
+    public readonly string[] YES_NO = new string[] { YES, NO };
     public const string NEXT_PAGE = "+";
     public const string PREV_PAGE = "-";
     public const string GOTO_PAGE = "G";
@@ -180,7 +185,7 @@ public class ContactBook
 
     private bool ConfirmExit()
     {
-        return true;
+        return Confirm("Do you want to exit?", NO);
     }
 
     private void ShowExitScreen()
@@ -197,74 +202,98 @@ public class ContactBook
     private void NextPage()
     {
         Console.WriteLine("Next Page");
-        PressEnterContinue();
+
     }
 
     private void PreviousPage()
     {
         Console.WriteLine("Previous Page");
-        PressEnterContinue();
+     
     }
 
     private void GoToPage()
     {
         Console.WriteLine("Go To Page");
-        PressEnterContinue();
+    
     }
 
     private void PageSize()
     {
         Console.WriteLine("Change Page Size");
-        PressEnterContinue();
+  
     }
 
     private void CreateContact()
     {
         Console.WriteLine("Create Contact");
-        PressEnterContinue();
+      
     }
 
     private void ReviewContact()
     {
         Console.WriteLine("Review Contact");
-        PressEnterContinue();
+       
     }
 
     private void UpdateContact()
     {
         Console.WriteLine("Update Contact");
-        PressEnterContinue();
+      
     }
 
     private void DeleteContact()
     {
         Console.WriteLine("Delete Contact");
-        PressEnterContinue();
+       
     }
 
     private void FindContacts()
     {
         Console.WriteLine("Find Contacts");
-        PressEnterContinue();
+  
     }
 
     private void OrderContacts()
     {
         Console.WriteLine("Order Contacts");
-        PressEnterContinue();
+    
     }
 
     private void DeduplicateContacts()
     {
         Console.WriteLine("Deduplicate Contacts");
-        PressEnterContinue();
+    
     }
 
     private void Exit()
     {
         Console.WriteLine("Exit");
-        PressEnterContinue();
+       
     }
-    
+
+    private string GetOptions(string prompt, string[] validOptions, string defaultOption)
+    {
+        string options = string.Join('/', validOptions); 
+        Console.Write(prompt + $" [{options}] ({defaultOption}) ");
+        string option = Console.ReadLine()!.ToUpper();
+
+        if (string.IsNullOrWhiteSpace(option))
+        {
+            option = defaultOption;
+        }
+
+        while (!validOptions.Contains(option))
+        {
+            Console.WriteLine("ERROR: Input Invalido, Please try again :)");
+            Console.Write(prompt + $" [{options}] ({defaultOption}) ");
+            option = Console.ReadLine()!.ToUpper();
+        }
+        return option;
+    }
+
+    private bool Confirm(string prompt, string defaultOption)
+    {
+        return GetOptions(prompt, YES_NO, defaultOption) == YES;
+    }
 
 }

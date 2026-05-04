@@ -53,7 +53,7 @@ public class ContactBook
         {
             do
             {
-                 ShowContacts();
+                ShowContacts();
                 ShowInputOptions();
                 input = GetInput();
             }
@@ -132,7 +132,7 @@ public class ContactBook
             $"[{GOTO_PAGE}] Go To Page       | [{FIND_CONTACTS}] Find Contacts  | [{ORDER_CONTACTS}] Order Contacts\n" +
             $"[{PAGE_SIZE}] Change Page Size | [{DEDUPLICATE_CONTACTS}] Deduplicate Contacts | [{EXIT}] Exit\n" +
             "\n> ";
-            Console.WriteLine();
+        Console.WriteLine();
 
         Console.WriteLine(inputOptions);
     }
@@ -152,15 +152,30 @@ public class ContactBook
         }
         else
         {
-             return true;
+            return true;
         }
-           
-       
+
+
     }
 
     private void ProcessInput(string input)
     {
-
+        switch (input)
+        {
+            case NEXT_PAGE: NextPage(); break;
+            case PREV_PAGE: PreviousPage(); break;
+            case GOTO_PAGE: GoToPage(); break;
+            case PAGE_SIZE: PageSize(); break;
+            case CREATE_CONTACT: CreateContact(); break;
+            case REVIEW_CONTACT: ReviewContact(); break;
+            case UPDATE_CONTACT: UpdateContact(); break;
+            case DELETE_CONTACT: DeleteContact(); break;
+            case FIND_CONTACTS: FindContacts(); break;
+            case ORDER_CONTACTS: OrderContacts(); break;
+            case DEDUPLICATE_CONTACTS: DeduplicateContacts(); break;
+            case EXIT: Exit(); break;
+            default: break;
+        }
     }
 
     private bool ConfirmExit()
@@ -178,5 +193,78 @@ public class ContactBook
         Console.WriteLine("Press ENTER to continue...");
         while (Console.ReadKey(true).Key != ConsoleKey.Enter) { }
     }
+
+    private void NextPage()
+    {
+        Console.WriteLine("Next Page");
+        PressEnterContinue();
+    }
+
+    private void PreviousPage()
+    {
+        Console.WriteLine("Previous Page");
+        PressEnterContinue();
+    }
+
+    private void GoToPage()
+    {
+        Console.WriteLine("Go To Page");
+        PressEnterContinue();
+    }
+
+    private void PageSize()
+    {
+        Console.WriteLine("Change Page Size");
+        PressEnterContinue();
+    }
+
+    private void CreateContact()
+    {
+        Console.WriteLine("Create Contact");
+        PressEnterContinue();
+    }
+
+    private void ReviewContact()
+    {
+        Console.WriteLine("Review Contact");
+        PressEnterContinue();
+    }
+
+    private void UpdateContact()
+    {
+        Console.WriteLine("Update Contact");
+        PressEnterContinue();
+    }
+
+    private void DeleteContact()
+    {
+        Console.WriteLine("Delete Contact");
+        PressEnterContinue();
+    }
+
+    private void FindContacts()
+    {
+        Console.WriteLine("Find Contacts");
+        PressEnterContinue();
+    }
+
+    private void OrderContacts()
+    {
+        Console.WriteLine("Order Contacts");
+        PressEnterContinue();
+    }
+
+    private void DeduplicateContacts()
+    {
+        Console.WriteLine("Deduplicate Contacts");
+        PressEnterContinue();
+    }
+
+    private void Exit()
+    {
+        Console.WriteLine("Exit");
+        PressEnterContinue();
+    }
+    
 
 }

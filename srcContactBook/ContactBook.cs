@@ -1,3 +1,4 @@
+using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 
@@ -50,10 +51,9 @@ public class ContactBook
 
         do
         {
-            ShowContacts();
-
             do
             {
+                 ShowContacts();
                 ShowInputOptions();
                 input = GetInput();
             }
@@ -132,6 +132,7 @@ public class ContactBook
             $"[{GOTO_PAGE}] Go To Page       | [{FIND_CONTACTS}] Find Contacts  | [{ORDER_CONTACTS}] Order Contacts\n" +
             $"[{PAGE_SIZE}] Change Page Size | [{DEDUPLICATE_CONTACTS}] Deduplicate Contacts | [{EXIT}] Exit\n" +
             "\n> ";
+            Console.WriteLine();
 
         Console.WriteLine(inputOptions);
     }
@@ -143,7 +144,18 @@ public class ContactBook
 
     private bool IsValidInput(string input)
     {
-        return true;
+        if (!COMMANDS.Contains(input))
+        {
+            Console.WriteLine("ERROR: Input Invalido, Please try again :)");
+            PressEnterContinue();
+            return false;
+        }
+        else
+        {
+             return true;
+        }
+           
+       
     }
 
     private void ProcessInput(string input)

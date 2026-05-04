@@ -275,9 +275,32 @@ public class ContactBook
         {
             Console.WriteLine("Operation Canceled. Contact was NOT saved.");
         }
+        PressEnterContinue();
+    }
+    private void ReviewContact()
+    {
+        int index = GetInt("Enter Index", 1, allcontacts.Count) - 1;
+        Console.Clear();
+        OnReviewContact(index);
+        PressEnterContinue();
+    }
+    private void OnReviewContact(int index)
+    {
+        Contact c = allcontacts[index];
+        Console.WriteLine(new string('#', 80));
+        Console.WriteLine("Review Contact");
+        Console.WriteLine(new string('#', 80));
+        Console.WriteLine();
+        Console.WriteLine($"First Name:[{c.GetFname()}] ");
+        Console.WriteLine($" Last Name:[{c.GetLname()}] ");
+        Console.WriteLine($"     Phone:[{c.GetPhone()}] ");
+        Console.WriteLine($"     Email:[{c.GetEmail()}] ");
+
+        Console.WriteLine();
+        
+
 
     }
-    private void ReviewContact() { Console.WriteLine("Review Contact"); }
     private void UpdateContact() { Console.WriteLine("Update Contact"); }
     private void DeleteContact() { Console.WriteLine("Delete Contact"); }
     private void FindContacts() { Console.WriteLine("Find Contacts"); }

@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.Formats.Tar;
 
 namespace ContactBook;
 
@@ -237,7 +238,17 @@ public class ContactBook
     {
         page = GetInt("Enter page: ", 1, PageCount(size, contacts.Count));
     }
-    private void PageSize() { Console.WriteLine("Change Page Size"); }
+    private void PageSize()
+    {
+        PageSize(ref page, ref size);
+    }
+
+    private void PageSize(ref int page, ref int size)
+    {
+        int max = Console.WindowHeight - 10;
+        size = GetInt("Enter page size", 1, max);
+        page = 1;
+    }
     private void CreateContact() { Console.WriteLine("Create Contact"); }
     private void ReviewContact() { Console.WriteLine("Review Contact"); }
     private void UpdateContact() { Console.WriteLine("Update Contact"); }

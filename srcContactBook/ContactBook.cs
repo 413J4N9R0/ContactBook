@@ -153,6 +153,7 @@ public class ContactBook
         {
             Console.WriteLine("ERROR: Input Invalido, Please try again :)");
             PressEnterContinue();
+            Console.Clear();
             return false;
         }
         else
@@ -190,7 +191,8 @@ public class ContactBook
 
     private void ShowExitScreen()
     {
-        Console.WriteLine("Goodbye!");
+        Console.Clear();
+        Console.WriteLine("Thank you for using le phone book, you're pretty cool.");
     }
 
     private void PressEnterContinue()

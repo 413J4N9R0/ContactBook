@@ -301,7 +301,66 @@ public class ContactBook
 
 
     }
-    private void UpdateContact() { Console.WriteLine("Update Contact"); }
+    private void UpdateContact()
+    {
+         int index = GetInt("Enter Index", 1, allcontacts.Count) - 1;
+        Console.Clear();
+        OnUpdateContact(index);
+        PressEnterContinue();
+    }
+    private void OnUpdateContact(int index)
+    {
+        Contact c = allcontacts[index];
+
+        string fname = c.GetFname();
+        string lname = c.GetLname();
+        string phone = c.GetPhone();
+        string email = c.GetEmail();
+
+        OnReviewContact(index);
+
+        Console.WriteLine(new string('#', 80));
+        Console.WriteLine("Update Contact");
+        Console.WriteLine(new string('#', 80));
+        Console.WriteLine();
+        if (Confirm("Do you want to edit this first name?", NO))
+        {
+            Console.WriteLine("Enter first name: ");
+            fname = Console.ReadLine()!;
+        }
+        if (Confirm("Do you want to edit this last name?", NO))
+        {
+            Console.WriteLine("Enter last name: ");
+            lname = Console.ReadLine()!;
+        }
+        if (Confirm("Do you want to edit this phone number?", NO))
+        {
+            Console.WriteLine("Enter phone number: ");
+            phone = Console.ReadLine()!;
+        }
+        if (Confirm("Do you want to edit this email?", NO))
+        {
+            Console.WriteLine("Enter email address: ");
+            email = Console.ReadLine()!;
+        }
+
+        if (Confirm("Do you want to update this contact?", YES))
+        {
+            c.SetFname(fname);
+            c.SetLname(lname);
+            c.SetPhone(phone);
+            c.SetEmail(email);
+            allcontacts.Add(c);
+            page = PageCount(size, allcontacts.Count);
+            Console.WriteLine("Contact Updated Succesfully");
+        }
+        else
+        {
+            Console.WriteLine("Operation Canceled. Contact was NOT Updated.");
+        }
+        Console.WriteLine();
+        PressEnterContinue();
+    }
     private void DeleteContact() { Console.WriteLine("Delete Contact"); }
     private void FindContacts() { Console.WriteLine("Find Contacts"); }
     private void OrderContacts() { Console.WriteLine("Order Contacts"); }

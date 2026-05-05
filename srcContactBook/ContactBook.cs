@@ -109,54 +109,50 @@ public class ContactBook
 
     private void ShowContacts()
     {
+        Console.Clear();
         ShowContacts(filteredcontacts, page, size);
     }
 
     private void ShowContacts(List<Contact> contacts, int page, int size)
+{
+    if (contacts.Count <= 0)
     {
-        Console.Clear();
+        Console.WriteLine("No contacts found.");
+        return;
+    }
 
-        if (filteredcontacts.Count <= 0)
-        {
-            Console.WriteLine("No contacts found.");
-            return;
-        }
+    int indexCol = Math.Max("#".Length, contacts.Count.ToString().Length);
+    int fnameCol = Math.Max("First Name".Length, contacts.Max(c => c.GetFname()?.Length ?? 0));
+    int lnameCol = Math.Max("Last Name".Length, contacts.Max(c => c.GetLname()?.Length ?? 0));
+    int phoneCol = Math.Max("Phone".Length, contacts.Max(c => c.GetPhone()?.Length ?? 0));
+    int emailCol = Math.Max("Email".Length, contacts.Max(c => c.GetEmail()?.Length ?? 0));
 
-        int indexCol = Math.Max("#".Length, filteredcontacts.Count.ToString().Length);
-        int fnameCol = Math.Max("First Name".Length, filteredcontacts.Max(c => c.GetFname()?.Length ?? 0));
-        int lnameCol = Math.Max("Last Name".Length, filteredcontacts.Max(c => c.GetLname()?.Length ?? 0));
-        int phoneCol = Math.Max("Phone".Length, filteredcontacts.Max(c => c.GetPhone()?.Length ?? 0));
-        int emailCol = Math.Max("Email".Length, filteredcontacts.Max(c => c.GetEmail()?.Length ?? 0));
+    Console.WriteLine(
+        "{0," + -indexCol + "}  {1," + -fnameCol + "}  {2," + -lnameCol + "}  {3," + -phoneCol + "}  {4," + -emailCol + "}",
+        "#", "First Name", "Last Name", "Phone", "Email"
+    );
+
+    Console.WriteLine(new string('-', indexCol + fnameCol + lnameCol + phoneCol + emailCol + 10));
+
+    int n = contacts.Count;
+    int pageCount = PageCount(size, n);
+
+    int s = Math.Clamp((page - 1) * size, 0, n);
+    int e = Math.Clamp(s + size, 0, n);
+
+    for (int i = s; i < e; i++)
+    {
+        Contact c = contacts[i];
 
         Console.WriteLine(
-            "{0," + -indexCol + "}  {1," + -fnameCol + "}  {2," + -lnameCol + "}  {3," + -phoneCol + "}  {4," + -emailCol + "}",
-            "#", "First Name", "Last Name", "Phone", "Email"
+            "{0," + indexCol + "}: {1," + fnameCol + "} {2," + lnameCol + "} {3," + phoneCol + "} {4," + emailCol + "}",
+            i + 1, c.GetFname(), c.GetLname(), c.GetPhone(), c.GetEmail()
         );
-
-        Console.WriteLine(new string('-', indexCol + fnameCol + lnameCol + phoneCol + emailCol + 10));
-
-        int n = filteredcontacts.Count;
-        int pageCount = PageCount(size, n);
-
-        int s = Math.Clamp((page - 1) * size, 0, n);
-        int e = Math.Clamp(s + size, 0, n);
-
-        for (int i = s; i < e; i++)
-        {
-            Contact c = filteredcontacts[i];
-
-            Console.WriteLine(
-                "{0," + indexCol + "}: {1," + fnameCol + "} {2," + lnameCol + "} {3," + phoneCol + "} {4," + emailCol + "}",
-                i + 1, c.GetFname(), c.GetLname(), c.GetPhone(), c.GetEmail()
-            );
-        }
-        for (int i = 0; i < size - e + s; i++)
-        {
-            Console.WriteLine();
-        }
-        Console.WriteLine();
-        Console.WriteLine($"Page {page} of {pageCount} ({s + 1}-{e} of {n})");
     }
+
+    Console.WriteLine();
+    Console.WriteLine($"Page {page} of {pageCount} ({s + 1}-{e} of {n})");
+}
 
 
     private void ShowInputOptions()
@@ -355,7 +351,6 @@ public class ContactBook
             c.SetLname(lname);
             c.SetPhone(phone);
             c.SetEmail(email);
-            filteredcontacts.Add(c);
             page = PageCount(size, filteredcontacts.Count);
             Console.WriteLine("Contact Updated Succesfully");
         }
@@ -369,7 +364,7 @@ public class ContactBook
    private void DeleteContact()
 {
     int index = GetInt("Enter Index", 1, filteredcontacts.Count) - 1;
-    OnDeleteContact(index);
+
 
         Console.Clear();
 
@@ -453,7 +448,93 @@ public class ContactBook
 
 
    }
-    private void DeduplicateContacts() { Console.WriteLine("Deduplicate Contacts"); }
+  private void DeduplicateContacts()
+{
+    var duplicateGroups = ContactMerger.FindDuplicates(allcontacts);
+
+    Console.Clear();
+
+    int groupId = 1;
+    bool found = false;
+
+        foreach (var group in duplicateGroups.Values)
+        {
+            if (group.Count <= 1)
+                continue;
+
+            found = true;
+
+            Console.WriteLine($"Group {groupId++}");
+            Console.WriteLine(new string('-', 40));
+
+            var contacts = group.Select(i => allcontacts[i]).ToList();
+            ShowContacts(contacts, 1, contacts.Count);
+
+            Console.WriteLine();
+
+
+            if (!Confirm("Do you want to merge these contacts?", NO))
+            {
+                Console.WriteLine("Operation declined.");
+                Console.WriteLine();
+                continue;
+            }
+
+
+            int maxIndex = contacts.Count;
+
+            int fnameIdx = GetInt("Pick index for FIRST NAME", 1, maxIndex) - 1;
+            int lnameIdx = GetInt("Pick index for LAST NAME", 1, maxIndex) - 1;
+            int phoneIdx = GetInt("Pick index for PHONE", 1, maxIndex) - 1;
+            int emailIdx = GetInt("Pick index for EMAIL", 1, maxIndex) - 1;
+
+
+            Contact merged = new Contact(
+                contacts[fnameIdx].GetFname(),
+                contacts[lnameIdx].GetLname(),
+                contacts[phoneIdx].GetPhone(),
+                contacts[emailIdx].GetEmail()
+            );
+
+
+            var sortedIndexes = group.OrderByDescending(i => i).ToList();
+
+            foreach (int idx in sortedIndexes)
+            {
+                allcontacts.RemoveAt(idx);
+            }
+
+
+            allcontacts.Add(merged);
+
+            Console.WriteLine("Contacts merged successfully.");
+            PressEnterContinue();
+
+
+            Console.Clear();
+            Console.WriteLine("Merged Contact Result");
+            Console.WriteLine(new string('-', 40));
+
+            Console.WriteLine($"First Name: {merged.GetFname()}");
+            Console.WriteLine($"Last Name : {merged.GetLname()}");
+            Console.WriteLine($"Phone     : {merged.GetPhone()}");
+            Console.WriteLine($"Email     : {merged.GetEmail()}");
+
+            Console.WriteLine();
+            PressEnterContinue();
+
+            if (!found)
+            {
+                Console.WriteLine("No duplicates found.");
+            }
+
+
+            filteredcontacts = allcontacts;
+            page = 1;
+
+            PressEnterContinue();
+          }
+        }
     private void Exit()
     {
         isExit = true;

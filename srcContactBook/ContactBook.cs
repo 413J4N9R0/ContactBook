@@ -306,6 +306,8 @@ public class ContactBook
          int index = GetInt("Enter Index", 1, allcontacts.Count) - 1;
         Console.Clear();
         OnUpdateContact(index);
+
+        Console.WriteLine();
         PressEnterContinue();
     }
     private void OnUpdateContact(int index)
@@ -344,7 +346,7 @@ public class ContactBook
             email = Console.ReadLine()!;
         }
 
-        if (Confirm("Do you want to update this contact?", YES))
+        if (Confirm("Do you want to update this contact?", NO))
         {
             c.SetFname(fname);
             c.SetLname(lname);
@@ -361,7 +363,54 @@ public class ContactBook
         Console.WriteLine();
         PressEnterContinue();
     }
-    private void DeleteContact() { Console.WriteLine("Delete Contact"); }
+   private void DeleteContact()
+{
+    int index = GetInt("Enter Index", 1, allcontacts.Count) - 1;
+    OnDeleteContact(index);
+
+        Console.Clear();
+
+        Console.WriteLine(new string('#', 80));
+        Console.WriteLine("Delete Contact");
+        Console.WriteLine(new string('#', 80));
+        Console.WriteLine();
+
+        OnDeleteContact(index);
+
+        Console.WriteLine();
+    }
+   private void OnDeleteContact(int index)
+{
+    if (index < 0 || index >= allcontacts.Count)
+    {
+        Console.WriteLine("Invalid index.");
+        PressEnterContinue();
+        return;
+    }
+
+    Contact c = allcontacts[index];
+    OnReviewContact(index);
+
+    Console.WriteLine();
+
+    if (Confirm("Do you want to Delete this contact?", NO))
+    {
+        allcontacts.Remove(c);
+
+        page = Math.Clamp(page, 1, PageCount(size, allcontacts.Count));
+
+        Console.WriteLine("Contact Deleted Successfully");
+    }
+    else
+    {
+        Console.WriteLine("Operation Canceled.");
+    }
+
+    Console.WriteLine();
+    PressEnterContinue();
+}
+
+      
     private void FindContacts() { Console.WriteLine("Find Contacts"); }
     private void OrderContacts() { Console.WriteLine("Order Contacts"); }
     private void DeduplicateContacts() { Console.WriteLine("Deduplicate Contacts"); }
@@ -410,7 +459,7 @@ public class ContactBook
     {
         return GetOption(prompt, YES_NO, defaultOption) == YES;
     }
-
+  
     private bool ConfirmExit()
     {
         return (isExit) ? isExit = Confirm("Do you want to exit?", NO) :  false;
